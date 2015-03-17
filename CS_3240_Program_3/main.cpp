@@ -7,8 +7,26 @@
 //
 
 #include <iostream>
-
+using namespace std;
+void cfg();
 int main(int argc, const char * argv[]) {
-    
+    cfg();
     return 0;
+}
+
+void cfg(){
+    enum State {START, X, Y};
+    State state = START;
+    
+    switch (state) {
+        case START:
+            
+            break;
+        case X:
+            break;
+        case Y:
+            break;
+        default:
+            break;
+    }
 }
