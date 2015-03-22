@@ -9,9 +9,9 @@
  This program reads an arbitrary context-free grammar and derives strings from the grammar.
  We will use the following non-plaindrome for the input:
  
- S --> aSa|bSb|X
- X --> aYb|bYa
- Y --> aY|bY|lambda
+ S -> aSa|bSb|X
+ X -> aYb|bYa
+ Y -> aY|bY|lambda
 */
 #include <iostream>
 #include <deque>
@@ -19,10 +19,11 @@
 
 using namespace std;
 
-enum State {START, X, Y};
+enum State {S, aSa, bSb, X, aYb, bYa, aY, bY, Y};
+deque<char> mydeque;
 void cfg();
 
-int main() {
+int main(int argc, const char * argv[]) {
     srand(time(NULL));              /* reset random numbers */
     for (int i = 0; i < 5; i++)     /* 5 random strings from the cfg */
         cfg();
@@ -31,42 +32,85 @@ int main() {
 
 /* context-free grammar function */
 void cfg(){
-    State state = START;
-    deque<char> mydeque;
+    State state = S;
     mydeque.clear();
-    switch (state) {
-        case START:
-            for(int i = 0; i < rand() % 5; i++){    /* S aSa */
+    int ran;
+    do{
+        switch (state) {
+            case S:
+                ran = rand() % 3;
+                if(ran == 0)
+                    state = aSa;
+                else if(ran == 1)
+                    state = bSb;
+                else
+                    state = X;
+                break;
+            case aSa:
+                ran = rand() % 3;
                 mydeque.push_front('a');
                 mydeque.push_back('a');
-            }
-            for(int j = 0; j < rand() % 5; j++){    /* S bSb */
+                if(ran == 0)
+                    state = aSa;
+                else if(ran == 1)
+                    state = bSb;
+                else
+                    state = X;
+                break;
+            case bSb:
+                ran = rand() % 3;
                 mydeque.push_front('b');
                 mydeque.push_back('b');
-            }
-            state = X;
-            //break;
-        case X:
-            for(int k = 0; k < rand() % 5; k++){    /* X aYb */
+                if(ran == 0)
+                    state = aSa;
+                else if(ran == 1)
+                    state = bSb;
+                else
+                    state = X;
+                break;
+            case X:
+                ran = rand() % 2;
+                if(ran == 0)
+                    state = aYb;
+                else if(ran == 1)
+                    state = bYa;
+            case aYb:
+                ran = rand() % 3;
                 mydeque.push_front('a');
                 mydeque.push_back('b');
-            }
-            for(int l = 0; l < rand() % 5; l++){    /* X bYa */
-                mydeque.push_front('b');
-                mydeque.push_back('a');
-            }
-            state = Y;
-            //break;
-        case Y:
-            for(int m = 0; m < rand() % 5; m++)     /* aY */
+                if(ran == 0)
+                    state = aY;
+                else if(ran == 1)
+                    state = bY;
+                else
+                    state = Y;
+                break;
+            case aY:
+                ran = rand() % 3;
                 mydeque.push_front('a');
-            for(int n = 0; n < rand() % 5; n++)     /* bY */
+                if(ran == 0)
+                    state = aY;
+                else if(ran == 1)
+                    state = bY;
+                else
+                    state = Y;
+                break;
+            case bY:
+                ran = rand() % 3;
                 mydeque.push_front('b');
-            for(int o = 0; o < mydeque.size(); o++)
-                cout << mydeque[o];                 /* print contents of the deque */
-            break;
-        default:
-            break;
-    }
+                if(ran == 0)
+                    state = aY;
+                else if(ran == 1)
+                    state = bY;
+                else
+                    state = Y;
+                break;
+            default:
+                break;
+        }
+    }while(state != Y);
+    
+    for(int i = 0; i <= mydeque.size(); i++)
+        cout << mydeque[i];
     cout << "\n";
 }
